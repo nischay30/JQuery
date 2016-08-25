@@ -1,0 +1,83 @@
+
+#tablediv
+{
+	height: 600px;
+	overflow: auto;
+}
+nav h2
+{
+	color: red;
+}
+
+#search
+{
+	margin-top: 120px;
+}
+
+#movieName
+{
+	margin-left:35%;
+	height: 40px;
+	font-size: 20px;
+}
+
+#movieTable
+{
+	width: 100%;
+}
+
+#movieTable th,td
+{
+	text-align:center;
+}
+
+
+
+@media (max-width: 768px) {
+
+	#movieName
+	{
+		margin-left:32%;
+		height: 40px;
+		width: 200px;
+		font-size: 20px;
+	}
+
+	#movieTable
+	{
+		font-size: 20px;
+	}
+}
+
+@media (max-width: 480px) 
+{
+	#movieName
+	{
+		margin-left:7%;
+		height: 40px;
+		width: 180px;
+		font-size: 20px;
+	}
+
+	#movieTable
+	{
+		font-size: 18px;
+	}
+
+}
+
+@media (min-width: 768px) {
+	#movieTable
+	{
+		font-size: 30px;
+	}
+}
+
+@media (min-width: 1200px) {
+
+	#movieTable
+	{
+		font-size: 30px;
+	}
+	
+}
