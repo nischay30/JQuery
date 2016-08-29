@@ -1,16 +1,117 @@
 $(function(){
 
+	var startpage=0;
+	var startlimit=10;
+	var lastpage=100000;
+
 	$countrytable= $('#countrytable');
 	$modalbody=$('#modalbody');
 	$btnAdd=$('#btnAdd');
 	$modal=$('.modal');
 
-		$('#search').on('click',getRow);			//to search by country Name
-		// $('#viewAll').on('click',getTable);			//to view all
-	
 
+	$("#first").on('click',function(){
+		getNextTable('first');
+	});
+
+	$("#next").on('click',function(){
+		getNextTable('next');
+	});
+	$("#previous").on('click',function(){
+		getNextTable('prev');
+	});
+	$("#last").on('click',function(){
+		getNextTable('last');
+	});
+
+
+		$('#search').on('click',getRow);			//to search by country Name
 		$('#form1').on('submit',addRow);			//to add a row
-		//delete call is inside gettable
+
+		(function getTable(startp)
+		{
+			$.ajax({
+				type:'GET',
+				url:'http://localhost:3000/countries/?_start='+startpage+'&_limit='+startlimit,
+				success:function(data){
+					$countrytable.empty();
+					$countrytable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Operations</th></tr></thead>")
+
+
+					$.each(data,function(i,country){
+						$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName.toUpperCase()+
+							"</a></td><td>"+country.gold+
+							"</td><td>"+country.silver+
+							"</td><td>"+country.bronze+
+							"</td><td>"+country.total+
+							"</td><td><span class='glyphicon glyphicon-edit' id='"+country.id+"e'>&nbsp</span><span class='glyphicon glyphicon-trash' id='"+country.id+"'></span></td></tr>");
+						$countrytable.append("<tr class='updaterow' id='"+country.id+"er'><td colspan='6' id='"+country.id+"ed'></td></tr>");
+						$('#'+country.id+'er').hide();
+					});
+
+			$('.glyphicon-trash').on('click',deleteRow);  //delete call
+			$('.glyphicon-edit').on('click',showRow);
+		}
+
+	});
+		})();
+
+//GET Command for Next All
+function getNextTable(pager)
+
+{
+	console.log(pager);
+	if(pager==='next')
+	{
+		startpage=startpage+10;
+	}
+	else if(pager==='prev')
+		startpage=startpage-10;
+	else if(pager==='first')
+		startpage=0;
+	else if(pager==='last')
+		startpage=lastpage-10;
+
+
+	if(startpage<0)
+	{
+		alert("This is the First Page");
+		startpage=startpage+10;
+	}
+	else if(startpage>=lastpage)
+	{
+		alert("This is the Last Page");
+		startpage=startpage-10;
+	}
+	else
+	{
+		$.ajax({
+			type:'GET',
+			url:'http://localhost:3000/countries/?_start='+startpage+'&_limit='+startlimit,
+			success:function(data){
+				$countrytable.empty();
+				$countrytable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Operations</th></tr></thead>")
+
+
+				$.each(data,function(i,country){
+					$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName.toUpperCase()+
+						"</a></td><td>"+country.gold+
+						"</td><td>"+country.silver+
+						"</td><td>"+country.bronze+
+						"</td><td>"+country.total+
+						"</td><td><span class='glyphicon glyphicon-edit' id='"+country.id+"e'>&nbsp</span><span class='glyphicon glyphicon-trash' id='"+country.id+"'></span></td></tr>");
+					$countrytable.append("<tr class='updaterow' id='"+country.id+"er'><td colspan='6' id='"+country.id+"ed'></td></tr>");
+					$('#'+country.id+'er').hide();
+				});
+
+			$('.glyphicon-trash').on('click',deleteRow);  //delete call
+			$('.glyphicon-edit').on('click',showRow);
+		}
+
+	});
+	}
+};
+
 
 //Post Command to add row
 function addRow(e)
@@ -34,37 +135,6 @@ function addRow(e)
 	})
 
 };
-
-//GET Command to view All
-(function getTable()
-{
-	var startpage=0;
-	var startlimit=10;
-	$.ajax({
-		type:'GET',
-		url:'http://localhost:3000/countries/?_start='+startpage+'&_limit='+startlimit,
-		success:function(data){
-			$countrytable.empty();
-			$countrytable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Operations</th></tr></thead>")
-
-
-			$.each(data,function(i,country){
-				$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName.toUpperCase()+
-					"</a></td><td>"+country.gold+
-					"</td><td>"+country.silver+
-					"</td><td>"+country.bronze+
-					"</td><td>"+country.total+
-					"</td><td><span class='glyphicon glyphicon-edit' id='"+country.id+"e'>&nbsp</span><span class='glyphicon glyphicon-trash' id='"+country.id+"'></span></td></tr>");
-				$countrytable.append("<tr class='updaterow' id='"+country.id+"er'><td colspan='6' id='"+country.id+"ed'></td></tr>");
-				$('#'+country.id+'er').hide();
-			});
-
-			$('.glyphicon-trash').on('click',deleteRow);  //delete call
-			$('.glyphicon-edit').on('click',showRow);
-		}
-
-	});
-})();
 
 function showRow()
 {
@@ -153,6 +223,9 @@ function getRow(){
 });
 	}
 };
+
+
+
 
 //Delete Row Function
 function deleteRow()
