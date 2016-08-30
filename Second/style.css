@@ -1,3 +1,28 @@
+.modal-dialog
+{
+	width: 100%;
+}
+
+#playerDiv
+{
+	height: 700px;
+	overflow-y: scroll;
+}
+
+#btnClose
+{
+	margin-left: 40%;
+}
+
+#btnAdd
+{
+	margin-left: 20px;
+}
+
+#playerTable thead
+{
+	background-color: #F0E8A0;
+}
 #searchrow
 {
 	margin-bottom:10px;
@@ -9,17 +34,34 @@
 	margin-bottom: 25px;
 }
 
-#countrytable
+#countrytable th
 {
 	text-align: center;
-	margin-top: 100px;
 	/*width: 100%;*/
 }
 
-#closeBtn
+#countrytable 
+{
+	margin-top: 20px;
+	/*width: 100%;*/
+}
+
+#updateBtn
 {
 	margin-left: 10px;
 	/*padding-left: 10px;*/
+}
+
+.updaterow 
+{
+
+	 text-align: right; 
+}
+
+.updaterow input
+{
+
+	 text-align: right; 
 }
 
 
@@ -28,7 +70,7 @@
 	float: right;
 }
 
-thead
+.tableCountry thead
 {
 	background:#0077BE;
 }

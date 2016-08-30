@@ -1,5 +1,6 @@
 $(function(){
 
+	var count=0;
 	var counter=0;
 	var limit=20;
 	var length=0;
@@ -37,6 +38,9 @@ function hidePager()
 	$last.on('click',function(){
 		getNextTable(length-20);
 	});
+
+	//player show call
+	$('.tableCountry').on('click','.country',showPlayer);
 
 
 
@@ -89,7 +93,7 @@ function appendTableHeader(data)
 function appendTableRows(data)
 {
 	$.each(data,function(i,country){
-		$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName+
+		$countrytable.append("<tr id='"+country.id+"r'><td class='country' data-target='#myModal1' data-toggle='modal'><a href='#'>"+country.countryName+
 			"</a></td><td>"+country.gold+
 			"</td><td>"+country.silver+
 			"</td><td>"+country.bronze+
@@ -148,6 +152,9 @@ function getRow(){
 //Delete Row Function
 function deleteRow()
 {
+	var answer=confirm("Are You Sure Want to Delete!!");
+	if(answer)
+	{
 	$('#'+this.id+'er').remove();
 	$('#'+this.id+'r').remove();
 	$.ajax({
@@ -157,6 +164,7 @@ function deleteRow()
 			length -=1;
 		}
 	});
+}
 }
 
 
@@ -194,16 +202,16 @@ function addRow(e)
 			$tdId=$('#'+this.id+'d');
 			$('.updaterow').hide();
 			$('#'+this.id+'r').fadeToggle();
-			$tdId.html("<div><label>Country Name</label><input type='text' required id='updatedCountryName' value='"+$('#'+$rowId).find('td:first')[0].innerText+
+			$tdId.html("<div><label>Country Name</label><input type='text' id='updatedCountryName' value='"+$('#'+$rowId).find('td:first')[0].innerText+
 				"'><br><label>Gold Medals</label><input type='text' id='updatedGoldMedals' value='"+$('#'+$rowId).find('td:nth-child(2)')[0].innerText+
 				"'><br><label>Silver Medals</label> <input type='text' id='updatedSilverMedals' value='"+$('#'+$rowId).find('td:nth-child(3)')[0].innerText+
 				"'><br><label>Bronze Medals</label> <input type='text' id='updatedBronzeMedals' value='"+$('#'+$rowId).find('td:nth-child(4)')[0].innerText+
 				"'><br><label>Total Medals</label> <input type='text' id='updatedTotalMedals' value='"+$('#'+$rowId).find('td:nth-child(5)')[0].innerText+"'</div>");
-			$tdId.append("<button class='btn-info btn-large' id='updateBtn'>Update</button><button class='btn-danger btn-large' id='closeBtn'>Close</button>");
+			$tdId.append("<button class='btn-info btn-large' id='closeBtn'>Close</button><button class='btn-danger btn-large' id='updateBtn'>Update</button>");
 			$('#updateBtn').on('click',updateRow);
-			$('#closeBtn').on('click',function(){
+			$('.updaterow').on('click','#closeBtn',function()
+			{
 				$('.updaterow').hide();
-
 			});
 		};
 
@@ -227,7 +235,7 @@ function updateRow()
 			$('#'+countryid+'ed').fadeToggle();			
 
 			alert("Updated");
-			$('#'+countryid+'r').html("<td class='country'><a href='#'>"+$updatedCountryName+
+			$('#'+countryid+'r').html("<td class='country' data-target='#myModal1'><a href='#'>"+$updatedCountryName+
 				"</a></td><td>"+$updatedGoldMedals+
 				"</td><td>"+$updatedSilverMedals+
 				"</td><td>"+$updatedBronzeMedals+
@@ -242,6 +250,40 @@ function updateRow()
 
 //complete
 
+	function showPlayer()
+	{
+	$.ajax({
+		type:'GET',
+			// url:'http://localhost:3000/players/?countryName='+this.innerText+'&_start='+count+'&_limit='+limit,
+			url:'http://localhost:3000/players/?countryName='+this.innerText,
+		success:function(data)
+		{
+			$('#playerTable').empty();
+			appendPlayerTableHeader(data);
+		}
+	});
+
+	};
+//Players table and moodal
+function appendPlayerTableHeader(data)
+{
+	$('#playerTable').append("<thead><tr><th>Player Name</th><th>Gender</th> <th>Phone</th> <th>Age</th> <th>Sport</th><th>Medal</th></tr></thead>");		
+	appendPlayerTableRows(data);
+
+};
+
+function appendPlayerTableRows(data)
+{
+	$.each(data,function(i,player){
+		$('#playerTable').append("<tr id='"+player.id+"r'><td class='country' data-target='#myModal1' data-toggle='modal'><a href='#'>"+player.name+
+			"</a></td><td>"+player.gender+
+			"</td><td>"+player.phone+
+			"</td><td>"+player.age+
+			"</td><td>"+player.sport+
+			"</td><td>"+player.medal+
+			"</td></tr>");
+	});
+};
 
 //Infinite Scrolling
 $(window).scroll(function(){
@@ -258,6 +300,7 @@ $(window).scroll(function(){
 	});
 	}
 });
+
 
 
 //pagination content(for this uncomment footer comment)
