@@ -16,6 +16,12 @@
 	/*width: 100%;*/
 }
 
+#closeBtn
+{
+	margin-left: 10px;
+	/*padding-left: 10px;*/
+}
+
 thead
 {
 	background:#0077BE;

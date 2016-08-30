@@ -35,7 +35,7 @@
 		<div class="row">
 			<div class="col-sm-offset-4 col-xs-offset-3">
 				<button class="btn btn-large btn-danger" data-target="#myModal" data-toggle='modal'>Add</button>		
-				<!-- <button class="btn btn-large btn-info" id="viewAll">View All</button>		 -->
+				<button class="btn btn-large btn-info" id="viewAll">View All</button>		
 				<button class="btn btn-large btn-info" id="search">Search</button>		
 
 			</div>
@@ -43,7 +43,7 @@
 	</div>
 	<!--end buttons container-->
 
-	<div class="container" id="countrytablediv">
+	<div class="container" id="countrytablediv" >
 		<div class="row">
 			<!-- <div class="col-xs-12 col-sm-12 col-lg-12"> -->
 			<table class="table-condensed table-responsive table-bordered table-striped table-hover col-lg-12 col-sm-12 col-xs-12 col-md-12" id="countrytable">
@@ -70,7 +70,7 @@
 							<div class="form-group">
 								<label class="col-lg-2 control-label" for="inputName">Country Name</label>
 								<div class="col-lg-10">
-									<input class="form-control" id="inputName" placeholder="Name" type="text" required>
+									<input class="form-control" id="inputName" placeholder="Name(Only Alphabets)"  pattern="[a-zA-Z\s]+" required>
 								</div>
 							</div>
 
@@ -112,7 +112,7 @@
 	<nav aria-label="Page navigation">
 		<ul class="pager">
 			<li><a href="#" id="first">First</a></li>
-			<li><a href="#" id="previous">Previous</a></li>
+			<li><a href="#" id="prev">Previous</a></li>
 			<li><a href="#" id="next">Next</a></li>
 			<li><a href="#" id="last">Last</a></li>
 		</ul>	</nav>
