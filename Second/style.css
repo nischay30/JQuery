@@ -22,6 +22,12 @@
 	/*padding-left: 10px;*/
 }
 
+
+#pagerId
+{
+	float: right;
+}
+
 thead
 {
 	background:#0077BE;
@@ -52,6 +58,10 @@ h2
 
 @media (min-width: 800px) 
 {
+	#pager-ul
+	{
+		padding-left: 37%;
+	}
 
 	.glyphicon
 	{
@@ -108,6 +118,10 @@ h2
 	#button
 	{
 		margin-top: 170px;
+	}
+	#pager-ul
+	{
+		padding-left: 12%;
 	}
 
 }

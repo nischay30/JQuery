@@ -12,52 +12,181 @@ $(function(){
 
 //Pager List
 $first=$('#first');
-$next=$('#next');
 $last=$('#last');
-$prev=$('#prev');
-
 
 function hidePager()
 {
 	$first.hide();
-	$prev.hide();
-	$next.hide();
 	$last.hide();
+	$('#pager-ul').hide();
 };
 
-
 	getTable();
-	$('#viewAll').on('click',getTable);		//call to get the first view of table
-	$('.table-condensed').on('click','.glyphicon-trash',deleteRow);  //delete call
-	$('.table-condensed').on('click','.glyphicon-edit',showRow);		//update call
 
+	$('#viewAll').on('click',getTable);		//call to view Table on viewall table
+	$('#search').on('click',getRow);		//to search by country Name
+	$('#form1').on('submit',addRow);		//to add a row
+
+	$('.table-condensed').on('click','.glyphicon-trash',deleteRow);  //delete call
+	$('.table-condensed').on('click','.glyphicon-edit',showRow);	//update call
 
 	$first.on('click',function(){
-		getNextTable('first');
-	});
-
-	$next.on('click',function(){
-		getNextTable('next');
-	});
-
-	$prev.on('click',function(){
-		getNextTable('prev');
+		getNextTable(0);
 	});
 
 	$last.on('click',function(){
-		getNextTable('last');
+		getNextTable(length-20);
 	});
 
 
-		$('#search').on('click',getRow);			//to search by country Name
-		$('#form1').on('submit',addRow);			//to add a row
+
+//function is used to get the length of the data
+	(function getLength()
+	{
+
+		$.ajax({
+			type:'GET',
+			url:'http://localhost:3000/countries',
+			success:function(data){
+				length=data.length;
+			}
+
+		});
+	})();
+
+
+//Starting funciton to show the table
+function getTable()
+{
+	$first.show();
+	$last.show();
+
+	$('#pager-ul').show();
+
+	counter=0;
+	$.ajax({
+		type:'GET',
+		url:'http://localhost:3000/countries/?_start='+counter+'&_limit='+limit,
+		success:function(data)
+		{
+			$countrytable.empty();
+			appendTableHeader(data);
+		}
+
+	});
+};
+
+
+//function used to append table header 
+function appendTableHeader(data)
+{
+	$countrytable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Operations</th></tr></thead>");		
+	appendTableRows(data);
+
+};
+
+//fucntion to append Table Rows
+function appendTableRows(data)
+{
+	$.each(data,function(i,country){
+		$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName+
+			"</a></td><td>"+country.gold+
+			"</td><td>"+country.silver+
+			"</td><td>"+country.bronze+
+			"</td><td>"+country.total+
+			"</td><td><span class='glyphicon glyphicon-edit' id='"+country.id+"e'>&nbsp</span><span class='glyphicon glyphicon-trash' id='"+country.id+"'></span></td></tr>");
+		$countrytable.append("<tr class='updaterow' id='"+country.id+"er'><td colspan='6' id='"+country.id+"ed'></td></tr>");
+		$('#'+country.id+'er').hide();
+	});
+};
 
 
 
+//function to show the contents of table
+function getNextTable(counter)
+{
+	$.ajax({
+		type:'GET',
+		url:'http://localhost:3000/countries/?_start='+counter+'&_limit='+limit,
+		success:function(data){
+			$countrytable.empty();
+			appendTableHeader(data);
+		}
+	});
+	
+};
+
+//Get Command to search One row
+function getRow(){
+	$countryName=$('#countryName').val();
+	hidePager();
+
+	$countrytable.empty();
+	if($countryName.trim().length===0)
+	{
+		alert("Please Enter Country Name to search");
+	}
+	else
+	{
+		$.ajax({
+			type:'GET',
+			url:'http://localhost:3000/countries/?countryName='+$countryName,
+			success:function(data){
+				if(data.length===0)
+				{
+					alert("Country Didn't exist int the Json File");
+				}
+				else
+				{
+					appendTableHeader(data);
+				}
+			}
+		});
+	}
+};
+
+//Delete Row Function
+function deleteRow()
+{
+	$('#'+this.id+'er').remove();
+	$('#'+this.id+'r').remove();
+	$.ajax({
+		type:'DELETE',
+		url:'http://localhost:3000/countries/'+this.id,
+		success:function(){
+			length -=1;
+		}
+	});
+}
 
 
+//Post Command to add row
+function addRow(e)
+{
+	e.preventDefault();
+	$inputName=$('#inputName').val();
+	$inputGold=$('#inputGold').val();
+	$inputSilver=$('#inputSilver').val();
+	$inputBronze=$('#inputBronze').val();
+	$total=parseFloat($inputGold)+parseFloat($inputSilver)+parseFloat($inputBronze);
+	var countries={"countryName": $inputName,"gold": $inputGold,"silver": $inputSilver,"bronze": $inputBronze,"total":$total};
+	$.ajax({
+		type:'POST',
+		data:countries,
+		url:'http://localhost:3000/countries',
+		success:function(country){
+			var data1=[country];
+
+			length +=1;
+			$modal.modal('toggle');
+			$('#form1')[0].reset();
+			appendTableRows(data1);
+		}	
+	})
+};
 
 
+	//show the hidden row of editing
 		function showRow()
 		{
 			$rowId=$(this.id);
@@ -111,172 +240,75 @@ function updateRow()
 };
 
 
-		//function is used to get the length of the data
-		(function getLength()
-		{
-
-			$.ajax({
-				type:'GET',
-				url:'http://localhost:3000/countries',
-				success:function(data){
-					length=data.length;
-				}
-
-			});
-		})();
+//complete
 
 
-//Starting funciton to show the table
-function getTable()
-{
-	$first.show();
-	$prev.show();
-	$next.show();
-	$last.show();
-
-	counter=0;
-	$.ajax({
-		type:'GET',
-		url:'http://localhost:3000/countries/?_start='+counter+'&_limit='+limit,
-		success:function(data)
-		{
-			$countrytable.empty();
-			appendTableHeader(data);
-		}
-
-	});
-};
-
-
-//function used to append table header 
-function appendTableHeader(data)
-{
-	$countrytable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Operations</th></tr></thead>");		
-	appendTableRows(data);
-
-};
-
-//fucntion to append Table Rows
-function appendTableRows(data)
-{
-	$.each(data,function(i,country){
-		$countrytable.append("<tr id='"+country.id+"r'><td class='country'><a href='#'>"+country.countryName+
-			"</a></td><td>"+country.gold+
-			"</td><td>"+country.silver+
-			"</td><td>"+country.bronze+
-			"</td><td>"+country.total+
-			"</td><td><span class='glyphicon glyphicon-edit' id='"+country.id+"e'>&nbsp</span><span class='glyphicon glyphicon-trash' id='"+country.id+"'></span></td></tr>");
-		$countrytable.append("<tr class='updaterow' id='"+country.id+"er'><td colspan='6' id='"+country.id+"ed'></td></tr>");
-		$('#'+country.id+'er').hide();
-	});
-};
-
-
-//GET Command for Next All
-function getNextTable(pager)
-{
-	if(pager==='next')
-		counter=counter+20;
-	else if(pager==='prev')
-		counter=counter-20;
-	else if(pager==='first')
-		counter=0;
-	else if(pager==='last')
-		counter=length-20;
-
-	if(counter<0)
-	{	
-		alert("This is the First Page");
-		counter=counter+20;
-	}
-	else if(counter>=length)
-	{
-		alert("This is the Last Page");
-		counter=counter-20;
-	}
-	else
-	{
+//Infinite Scrolling
+$(window).scroll(function(){
+	if ($(window).scrollTop() == $(document).height()-$(window).height()){
+		counter+=20;
 		$.ajax({
 			type:'GET',
 			url:'http://localhost:3000/countries/?_start='+counter+'&_limit='+limit,
-			success:function(data){
-				$countrytable.empty();
-				appendTableHeader(data);
-			}
-		});
+			success:function(data)
+			{
+			//	$countrytable.empty();
+			appendTableRows(data);
+		}
+	});
 	}
-};
+});
 
 
-//complete
-//Post Command to add row
-function addRow(e)
+//pagination content(for this uncomment footer comment)
+//this one is last child of pager
+/*$('.pagination').on('click','li:nth-child(6)',function()
 {
-	e.preventDefault();
-	$inputName=$('#inputName').val();
-	$inputGold=$('#inputGold').val();
-	$inputSilver=$('#inputSilver').val();
-	$inputBronze=$('#inputBronze').val();
-	$total=parseFloat($inputGold)+parseFloat($inputSilver)+parseFloat($inputBronze);
-	var countries={"countryName": $inputName,"gold": $inputGold,"silver": $inputSilver,"bronze": $inputBronze,"total":$total};
-	$.ajax({
-		type:'POST',
-		data:countries,
-		url:'http://localhost:3000/countries',
-		success:function(country){
-			var data1=[country];
-
-			length +=1;
-			$modal.modal('toggle');
-			$('#form1')[0].reset();
-			appendTableRows(data1);
-		}	
-	})
-};
-
-
-//complete
-//Get Command to search One row
-function getRow(){
-	$countryName=$('#countryName').val();
-	hidePager();
-
-	$countrytable.empty();
-	if($countryName.trim().length===0)
+	var start=$('#pager-ul li:nth-child(2)')[0].innerText;
+	var end=$('#pager-ul li:nth-child(5)')[0].innerText;
+	if(start==length/2)
 	{
-		alert("Please Enter Country Name to search");
+		alert("This is last Page");
 	}
 	else
 	{
-		$.ajax({
-			type:'GET',
-			url:'http://localhost:3000/countries/?countryName='+$countryName,
-			success:function(data){
-				if(data.length===0)
-				{
-					alert("Country Didn't exist int the Json File");
-				}
-				else
-				{
-					appendTableHeader(data);
-				}
-			}
-		});
+		$('#pager-ul').html('<li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li><li><a href="#">'+(parseFloat(start)+4)+
+			'</a></li><li><a href="#">'+(parseFloat(start)+5)+
+			'</a></li><li><a href="#">'+(parseFloat(start)+6)+
+			'</a></li><li><a href="#">'+(parseFloat(start)+7)+
+			'</a></li><li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
 	}
-};
+});
 
-//complete
-//Delete Row Function
-function deleteRow()
+//this one is first child of pager
+$('.pagination').on('click','li:nth-child(1)',function()
 {
-	$('#'+this.id+'er').remove();
-	$('#'+this.id+'r').remove();
-	$.ajax({
-		type:'DELETE',
-		url:'http://localhost:3000/countries/'+this.id,
-		success:function(){
-			length -=1;
-		}
-	});
-}
+	var start=$('#pager-ul li:nth-child(2)')[0].innerText;
+	var end=$('#pager-ul li:nth-child(5)')[0].innerText;
+
+	if(start==1)
+	{
+		alert("This is the First Page");
+	}
+	else
+	{
+		$('#pager-ul').html('<li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li><li><a href="#">'+(parseFloat(start)-4)+
+			'</a></li><li><a href="#">'+(parseFloat(start)-3)+
+			'</a></li><li><a href="#">'+(parseFloat(start)-2)+
+			'</a></li><li><a href="#">'+(parseFloat(start)-1)+
+			'</a></li><li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
+	}
+});
+
+
+//this one is for pager
+$('.pagination').on('click','li',function(){
+	if(!isNaN(this.innerText))
+	{
+		console.log("yess");
+		counter=20*(this.innerText-1);
+		getNextTable(counter);
+	}
+});
+*/
 });
