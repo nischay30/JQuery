@@ -8,7 +8,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">	<!-- Bootstrap CSS -->
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link href="style.css" rel="stylesheet">
+	<link href="includes/css/styles.css" rel="stylesheet">
 
 	<!-- Include Modernizr in the head, before any other Javascript -->
 	<script src="includes/js/modernizr-2.6.2.min.js"></script>
@@ -18,7 +18,7 @@
 <body>
 	<nav class="navbar-default navbar-fixed-top">
 		<div class="container-fluid">
-			<a class="navbar-brand" href="/" id="brandlogo"><img src="riologo.jpg" class="img-responsive" alt="Your Logo"></a>
+			<a class="navbar-brand" href="/" id="brandlogo"><img src="images/rio.jpg" class="img-responsive" alt="Your Logo"></a>
 			
 			<h2>Rio Olympics 2016</h2>
 		</div>
@@ -36,11 +36,11 @@
 				<button class="btn btn-large btn-info center-block" id="search">Search</button>		
 			</div>
 		</div>
-	
+
 	</div>
 
 
-	<div class="container" style="padding-top:50px;">
+	<div class="container" style="padding-top:30px;">
 		<div class="row pull-right">
 			<button class="btn btn-large btn-danger" data-target="#myModal" data-toggle='modal'>Add</button>		
 
@@ -60,7 +60,7 @@
 
 
 	<div class="container">
-		<div class="modal fade" id="myModal">
+		<div class="modal modalc fade" id="myModal">
 			<div  class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -70,27 +70,27 @@
 					<div class="modal-body">
 						<form class="form-horizontal" id="form1">
 							<div class="form-group">
-								<label class="col-lg-2 control-label" for="inputName">Country Name</label>
-								<div class="col-lg-10">
-									<input class="form-control" id="inputName" placeholder="Name(Only Alphabets)"  pattern="[a-zA-Z\s]+" required>
+								<label class="col-lg-4 control-label" for="inputName">Country Name</label>
+								<div class="col-lg-8">
+									<input class="form-control" id="inputName" placeholder="Name(Only Alphabets)"  pattern="^[a-zA-Z][a-zA-Z ]+[a-zA-Z]$" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-lg-2 control-label" for="inputGold">Gold Medals</label>
-								<div class="col-lg-10">
+								<label class="col-lg-4 control-label" for="inputGold">Gold Medals</label>
+								<div class="col-lg-8">
 									<input class="form-control" id="inputGold" placeholder="Gold Medals" type="number" required>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-lg-2 control-label" for="inputSilver">Silver Medals</label>
-								<div class="col-lg-10">
+								<label class="col-lg-4 control-label" for="inputSilver">Silver Medals</label>
+								<div class="col-lg-8">
 									<input class="form-control" id="inputSilver" placeholder="Silver Medals" type="number" required>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-lg-2 control-label" for="inputBronze">Bronze Medals</label>
-								<div class="col-lg-10">
+								<label class="col-lg-4 control-label" for="inputBronze">Bronze Medals</label>
+								<div class="col-lg-8">
 									<input class="form-control" id="inputBronze" placeholder="Bronze Medals" type="number" required>
 								</div>
 							</div>
@@ -113,8 +113,8 @@
 
 <div class="container-fluid">
 
-	<div class="modal fade" id="myModal1">
-		<div  class="modal-dialog">
+	<div class="modal modalPlayer fade" id="myModal1">
+		<div  class="modal-dialog" id="myModalDialog1">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button class="close" data-dismiss="modal">&times;</button>
@@ -174,8 +174,6 @@
 
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="player.js"></script>
-<!-- <script type="text/javascript" src="pager.js"></script> -->
-
+<script type="text/javascript" src="includes/js/script.js"></script>
 </body>
 </html>
