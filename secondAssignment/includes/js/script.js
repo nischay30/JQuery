@@ -78,7 +78,7 @@ function getTable()
 //function used to append table header 
 function appendTableHeader(data)
 {
-	countryTable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Edit</th></tr></thead>");		
+	countryTable.append("<thead><tr><th>Country Name</th><th>Gold Medals</th> <th>Silver Medals</th> <th>Bronze Medals</th> <th>Total Medals</th><th>Actions</th></tr></thead>");		
 	appendTableRows(data);
 };
 
