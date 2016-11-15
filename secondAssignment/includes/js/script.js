@@ -23,7 +23,7 @@ function hidePager()
 	$('#pager-ul').hide();
 };
 
-	getTable();
+getTable();
 
 	$('#viewAll').on('click',getTable);		//call to view Table on viewall table
 	$('#search').on('click',getRow);		//to search by country Name
@@ -62,6 +62,7 @@ function getTable()
 			}
 			else
 			{
+
 				length=res.getResponseHeader('X-Total-Count');
 				countryTable.empty();
 				appendTableHeader(data);
@@ -72,6 +73,7 @@ function getTable()
 			alert("Error Happen");
 		}
 	});
+	return "hello";
 };
 
 
@@ -206,13 +208,12 @@ function addRow(e)
 			length +=1;
 			$modal.modal('toggle');
 			$('#form1')[0].reset();
-			appendTableRows(data1);
+ 			appendTableRows(data1);
 		},
 		error:function()
 		{
 			alert("Error Happen");
 		}
-
 	})
 };
 
@@ -282,26 +283,26 @@ function showPlayer()
 {
 	$.ajax({
 		type:'GET',
-			url:'http://localhost:3000/players/?countryName='+this.innerText,
-			success:function(data)
+		url:'http://localhost:3000/players/?countryName='+this.innerText,
+		success:function(data)
+		{
+			if(data.length===0)
 			{
-				if(data.length===0)
-				{
-					modalPlayer.modal('hide');
-					alert("Player didn't Exist for this Country");
-				}
-				else
-				{
-					$('#playerTable').empty();
-					appendPlayerTableHeader(data);
-				}
-			},
-			error:function()
-			{
-				alert("Error Happen");
+				modalPlayer.modal('hide');
+				alert("Player didn't Exist for this Country");
 			}
+			else
+			{
+				$('#playerTable').empty();
+				appendPlayerTableHeader(data);
+			}
+		},
+		error:function()
+		{
+			alert("Error Happen");
+		}
 
-		});
+	});
 
 };
 //Players table and moodal
